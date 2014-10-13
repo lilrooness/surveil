@@ -11,24 +11,16 @@ int getMapValue(lua_State *L, int x, int y);
 
 int main(int argc, char **argv) {
 
-  int tileSize = 50;
-  int mapSize = 11;
+  int tileSize = 5;
+  // int mapSize = 100;
 
   lua_State *L = luaL_newstate();
   luaL_openlibs(L);
   luaL_dofile(L, "island.lua");
 
-  int x, y;
-  for(y = 0; y<11; y++) {
-    for(x = 0; x<11; x++) {
-      lua_getglobal(L, "retreiveMapValue");
-      lua_pushnumber(L, x);
-      lua_pushnumber(L, y);
-      lua_pcall(L, 2, 1, 0);
-      printf("%d", (int)lua_tointeger(L, -1));
-    }
-    printf("\n");
-  }
+  lua_getglobal(L, "getMapSize");
+  lua_pcall(L, 0, 1, 0);
+  int mapSize = (int)lua_tointeger(L, -1);
 
   //do lua stuff
   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0) {
@@ -68,6 +60,7 @@ int main(int argc, char **argv) {
     SDL_SetRenderDrawColor(context, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(context);
 
+    int x, y;
     for(y=0; y<mapSize; y++) {
       for(x=0; x<mapSize; x++) {
         SDL_Rect tile = {x*tileSize, y*tileSize, tileSize, tileSize};
@@ -106,5 +99,7 @@ int getMapValue(lua_State *L, int x, int y) {
   lua_pushnumber(L, x);
   lua_pushnumber(L, y);
   lua_pcall(L, 2, 1, 0);
-  return (int)lua_tointeger(L, -1);
+  int value = (int)lua_tointeger(L, -1);
+  lua_pop(L, 1);
+  return value;
 }

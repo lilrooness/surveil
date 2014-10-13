@@ -71,10 +71,10 @@ end
 
 matrix = {};
 
-dim = 11
+dim = 100
 
-seedStart = 4
-seedEnd  = 6
+seedStart = 50
+seedEnd  = 55
 
 math.randomseed(os.time())
 
@@ -93,7 +93,7 @@ for y = 0,dim-1 do
 end
 
 -- Generate Island
-matrix = passMap(matrix, dim, dim, 6, 1, 0)
+matrix = passMap(matrix, dim, dim, 55, 1, 0)
 
 -- Place random mountain seeds
 numMountains = 2;
@@ -108,26 +108,13 @@ while mountainsPlaced < numMountains do
 end
 
 -- Generate Island Mountains
-matrix = passMap(matrix, dim, dim, 3, 2, 1)
+matrix = passMap(matrix, dim, dim, 20, 2, 1)
 
--- Draw map to console
-for y = 0,dim-1 do
-  for x = 0,dim-1 do
-    if matrix[y][x] < 100 then
-      io.write(' ');
-    end
-    if matrix[y][x] == 1 then
-      io.write('#');
-    elseif matrix[y][x] == 2 then
-      io.write('.');
-    else
-      io.write(' ');
-    end
-  end
-  print()
-end
-
--- C Hook
+-- C Hooks . . .
 function retreiveMapValue(x, y)
   return matrix[y][x]
+end
+
+function getMapSize()
+  return dim
 end
