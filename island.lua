@@ -98,17 +98,21 @@ matrix = passMap(matrix, dim, dim, 55, 1, 0)
 -- Place random mountain seeds
 numMountains = 2;
 mountainsPlaced = 0;
+
 while mountainsPlaced < numMountains do
   local x = math.floor(math.random()*dim);
   local y = math.floor(math.random()*dim);
   if matrix[y][x] == 1 then
-    matrix[y][x] = 2
+    matrix[y][x] = 2;
     mountainsPlaced = mountainsPlaced + 1;
   end
 end
 
--- Generate Island Mountains
-matrix = passMap(matrix, dim, dim, 20, 2, 1)
+-- Generate Island Mountain tops
+matrix = passMap(matrix, dim, dim, 25, 2, 1)
+
+-- Generate Rest Mountains
+-- matrix = passMap(matrix, dim, dim, 15, 3, 2)
 
 -- C Hooks . . .
 function retreiveMapValue(x, y)
