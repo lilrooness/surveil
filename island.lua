@@ -71,10 +71,10 @@ end
 
 matrix = {};
 
-dim = 100
+dim = 200
 
-seedStart = 50
-seedEnd  = 55
+seedStart = 100
+seedEnd  = 105
 
 math.randomseed(os.time())
 
@@ -92,10 +92,10 @@ for y = 0,dim-1 do
 end
 
 -- Generate Island
-matrix = passMap(matrix, dim, dim, 55, 1, 0)
+matrix = passMap(matrix, dim, dim, 150, 1, 0)
 
 -- Place random mountain seeds
-numMountains = 2;
+numMountains = 20;
 mountainsPlaced = 0;
 peaks = {}
 
@@ -108,20 +108,30 @@ while mountainsPlaced < numMountains do
   end
 end
 
--- Generate Island Mountains
-matrix[peaks[0].y][peaks[0].x] = 4;
-matrix[peaks[1].y][peaks[1].x] = 4;
-matrix = passMap(matrix, dim, dim, 50, 4, 1)
+for i=0,numMountains-1 do
+  print(peaks[i].x.." "..peaks[i].y);
+end
+
+-- Generate Island Forests
+for i=1,numMountains-1 do
+  matrix[peaks[i].y][peaks[i].x] = 4;
+end
+
+matrix = passMap(matrix, dim, dim, 60, 4, 1)
 
 -- Generate Island Mountains
-matrix[peaks[0].y][peaks[0].x] = 2;
-matrix[peaks[1].y][peaks[1].x] = 2;
-matrix = passMap(matrix, dim, dim, 25, 2, 4)
+for i=1,numMountains-1 do
+  matrix[peaks[i].y][peaks[i].x] = 2;
+end
+
+matrix = passMap(matrix, dim, dim, 30, 2, 4)
 
 -- Generate Snow on mountain peaks
-matrix[peaks[0].y][peaks[0].x] = 3;
-matrix[peaks[1].y][peaks[1].x] = 3;
-matrix = passMap(matrix, dim, dim, 15, 3, 2)
+for i=1,numMountains-1 do
+  matrix[peaks[i].y][peaks[i].x] = 3;
+end
+
+matrix = passMap(matrix, dim, dim, 10, 3, 2)
 
 -- Generate beaches
 for y=0,dim-1 do
@@ -134,6 +144,7 @@ for y=0,dim-1 do
   end
 end
 
+--generate shore seas
 for y=0,dim-1 do
   for x=0,dim-1 do
     if matrix[y][x] == 0 then
@@ -143,7 +154,6 @@ for y=0,dim-1 do
     end
   end
 end
-
 
 -- C Hooks . . .
 function retreiveMapValue(x, y)

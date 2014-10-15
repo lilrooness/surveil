@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
     int x, y;
     for(y=0; y<mapSize; y++) {
       for(x=0; x<mapSize; x++) {
-        SDL_Rect tile = {x*tileSize, y*tileSize, tileSize, tileSize};
+        SDL_Rect tile = {x*tileSizeX, y*tileSizeY, tileSizeX, tileSizeY};
         int val = getMapValue(L, x, y);
 
         switch(val) {
