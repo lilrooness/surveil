@@ -10,8 +10,6 @@
 int getMapValue(lua_State *L, int x, int y);
 
 int main(int argc, char **argv) {
-
-  int tileSize = 5;
   // int mapSize = 100;
 
   lua_State *L = luaL_newstate();
@@ -21,6 +19,9 @@ int main(int argc, char **argv) {
   lua_getglobal(L, "getMapSize");
   lua_pcall(L, 0, 1, 0);
   int mapSize = (int)lua_tointeger(L, -1);
+  int tileSize = 5;
+  int tileSizeX = 640 / mapSize;
+  int tileSizeY = 480 / mapSize;
 
   //do lua stuff
   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0) {
@@ -67,23 +68,34 @@ int main(int argc, char **argv) {
         int val = getMapValue(L, x, y);
 
         switch(val) {
-          case 0: {
+          case 0: {//Water
             SDL_SetRenderDrawColor(context, 0x00, 0x00, 0xFF, 0xFF);
             break;
           }
-          case 1: {
+          case 1: {//Grass
             SDL_SetRenderDrawColor(context, 0x00, 0xFF, 0x00, 0xFF);
             break;
           }
-          case 3: {
+          case 3: {//Snow
             SDL_SetRenderDrawColor(context, 0xFF, 0xFF, 0xFF, 0xFF);
             break;
           }
-          case 2: {
+          case 2: {//Rock
             SDL_SetRenderDrawColor(context, 0x88, 0x88, 0x88, 0xFF);
             break;
           }
-
+          case 4: {//Forest
+            SDL_SetRenderDrawColor(context, 0x00, 0x88, 0x00, 0xFF);
+            break;
+          }
+          case 5: {//sand
+            SDL_SetRenderDrawColor(context, 0xED, 0xC9, 0xAF, 0xFF);
+            break;
+          }
+          case 6: {//Foam
+            SDL_SetRenderDrawColor(context, 0x35, 0x35, 0xFF, 0xFF);
+            break;
+          }
         }
         SDL_RenderFillRect(context, &tile);
       }
