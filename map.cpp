@@ -14,8 +14,8 @@ void Map::generateMap() {
   mapSize = (int)lua_tointeger(L, -1);
 
   // int tileSize = 5;
-  tileSizeX = 640 / mapSize;
-  tileSizeY = 480 / mapSize;
+  tileSizeX = 640.0f / (float)mapSize;
+  tileSizeY = 480.0f / (float)mapSize;
 }
 
 int Map::getMapPoint(int x, int y) {
@@ -26,4 +26,8 @@ int Map::getMapPoint(int x, int y) {
   int value = (int)lua_tointeger(L, -1);
   lua_pop(L, 1);
   return value;
+}
+
+Map::~Map() {
+  lua_close(L);
 }
