@@ -19,8 +19,10 @@ public:
 
   void render(int screen, Map *map, Player *player);
 
+  SDL_Texture *cross;
+
   void renderPlanningScreen();
-  void renderFlightScreen();
+  void renderFlightScreen(Map *map, Player *player, int viewWidth, int viewHeight);
 };
 
 #endif

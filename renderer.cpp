@@ -3,7 +3,6 @@
 Renderer::Renderer() {
   atexit(SDL_Quit);
 
-    //do lua stuff
   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0) {
     fprintf(stderr, "\nUnable to initialize SDL:  %s\n", SDL_GetError());
     exit(1);
@@ -25,6 +24,19 @@ Renderer::Renderer() {
       fprintf(stderr, "Could not initialize software renderer. Well this is embarrasing . . .%s\n", SDL_GetError());
       exit(1);
     }
+  }
+
+  SDL_Surface *crossSurface = SDL_LoadBMP("cross.bmp");
+  if(crossSurface == NULL) {
+    std::cout<<"unable to load cross"<<std::endl;
+  }
+
+  SDL_SetColorKey(crossSurface, SDL_TRUE, SDL_MapRGB(crossSurface->format, 255, 0, 255));
+  cross = SDL_CreateTextureFromSurface(context, crossSurface);
+
+  if(cross == NULL) {
+    std::cout<<"No cross"<<std::endl;
+    printf( "Unable to create texture! SDL Error: %s\n", SDL_GetError());
   }
 }
 
@@ -70,9 +82,75 @@ void Renderer::render(int screen, Map *map, Player *player) {
             SDL_SetRenderDrawColor(context, 0x00, 0x00, 0x00, 0x00);
           }
         }
+
         SDL_RenderFillRect(context, &tile);
       }
     }
-    // SDL_RenderCopy(context, cross, NULL, NULL);
+
+    SDL_SetRenderDrawColor(context, 0xFF, 0x00, 0x00, 0xFF);
+    for(int i=0; i<player->wayPoints.size(); i++) {
+      waypoint wp = player->wayPoints.at(i);
+      SDL_Rect wpTile = {floor(wp.x * map->tileSizeX), floor(wp.y * map->tileSizeY), map->tileSizeX*2, map->tileSizeY*2};
+      SDL_RenderCopy(context, cross, NULL, &wpTile);
+    }
+
+    SDL_SetRenderDrawColor(context, 0xFF, 0x00, 0x00, 0xFF);
+
     SDL_RenderPresent(context);
+}
+
+void Renderer::renderFlightScreen(Map *map, Player *player, int viewWidth, int viewHeight) {
+  
+  float tilex, tiley;
+  tiley = 480.0f / (float)viewHeight;
+  tilex = 640.0f / (float)viewWidth;
+
+  for(int y=player->yPos - 1; y<player->yPos + viewHeight+1; y++) {
+    for(int x=player->yPos - 1; x<player->xPos + viewWidth+1; x++) {
+
+      SDL_Rect tile = {ceil(x*tilex), ceil(y*tiley), ceil(tilex), ceil(tiley)};
+      
+      if(x < 0 || x > map->mapSize-1 || y < 0 || y > map->mapSize-1) {
+        SDL_SetRenderDrawColor(context, 0x00, 0x00, 0x00, 0x00);
+      
+      } else {
+      
+        switch(map->getMapPoint(x, y)) {
+          case 0: {//Water
+            SDL_SetRenderDrawColor(context, 0x00, 0x00, 0xFF, 0xFF);
+            break;
+          }
+          case 1: {//Grass
+            SDL_SetRenderDrawColor(context, 0x00, 0xFF, 0x00, 0xFF);
+            break;
+          }
+          case 3: {//Snow
+            SDL_SetRenderDrawColor(context, 0xFF, 0xFF, 0xFF, 0xFF);
+            break;
+          }
+          case 2: {//Rock
+            SDL_SetRenderDrawColor(context, 0x88, 0x88, 0x88, 0xFF);
+            break;
+          }
+          case 4: {//Forest
+            SDL_SetRenderDrawColor(context, 0x00, 0x88, 0x00, 0xFF);
+            break;
+          }
+          case 5: {//sand
+            SDL_SetRenderDrawColor(context, 0xED, 0xC9, 0xAF, 0xFF);
+            break;
+          }
+          case 6: {//Foam
+            SDL_SetRenderDrawColor(context, 0x35, 0x35, 0xFF, 0xFF);
+            break;
+          }
+          default: {
+            SDL_SetRenderDrawColor(context, 0x00, 0x00, 0x00, 0xFF);
+          }
+        }
+      }
+    }
+  }
+
+  SDL_RenderPresent(context);
 }
