@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
   std::vector<waypoint> wpts;
 
   bool usingMap = true;
+  bool pressedEnter = false;
 
   Player *p = new Player(0,0,0,0);
 
@@ -28,6 +29,8 @@ int main(int argc, char **argv) {
   Renderer renderer;
 
   bool isRunning = true;
+
+  unsigned int lastTime = SDL_GetTicks();
 
   while(isRunning) {
     SDL_Event event;
@@ -43,11 +46,26 @@ int main(int argc, char **argv) {
           p->clicked = true;
           p->wayPoints.push_back({ceil((float)event.button.x / map->tileSizeX), ceil((float)event.button.y / map->tileSizeY)});
         }
+      } else if(event.type == SDL_KEYDOWN) {
+        std::cout<<"keydown event"<<std::endl;
+        switch(event.key.keysym.sym) {
+          case SDLK_SPACE: {
+            std::cout<<"space pressed"<<std::endl;
+            pressedEnter = true;
+            break;
+          }
+        }
       }
     }
 
     if(usingMap) {
       renderer.render(0, map, p);
+      if(pressedEnter && SDL_GetTicks() - lastTime > (1000 / 60)) {
+        lastTime = SDL_GetTicks();
+        p->update(map);
+      }
+    } else {
+      renderer.renderFlightScreen(map, p, 7, 7);
     }
   }
 

@@ -94,7 +94,9 @@ void Renderer::render(int screen, Map *map, Player *player) {
       SDL_RenderCopy(context, cross, NULL, &wpTile);
     }
 
-    SDL_SetRenderDrawColor(context, 0xFF, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(context, 0x00, 0x00, 0x00, 0xFF);
+    SDL_Rect playerMarker = {player->xPos, player->yPos, map->tileSizeX*3, map->tileSizeY*3};
+    SDL_RenderFillRect(context, &playerMarker);
 
     SDL_RenderPresent(context);
 }
@@ -105,7 +107,7 @@ void Renderer::renderFlightScreen(Map *map, Player *player, int viewWidth, int v
   tiley = 480.0f / (float)viewHeight;
   tilex = 640.0f / (float)viewWidth;
 
-  for(int y=player->yPos - 1; y<player->yPos + viewHeight+1; y++) {
+  for(int y=player->yPos - viewHeight / 2; y<player->yPos + viewHeight / 2; y++) {
     for(int x=player->yPos - 1; x<player->xPos + viewWidth+1; x++) {
 
       SDL_Rect tile = {ceil(x*tilex), ceil(y*tiley), ceil(tilex), ceil(tiley)};
