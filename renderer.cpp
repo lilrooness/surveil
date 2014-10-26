@@ -94,6 +94,7 @@ void Renderer::render(int screen, Map *map, Player *player) {
       SDL_RenderCopy(context, cross, NULL, &wpTile);
     }
 
+    //temporary drawing of player position to check player movement
     SDL_SetRenderDrawColor(context, 0x00, 0x00, 0x00, 0xFF);
     SDL_Rect playerMarker = {player->xPos, player->yPos, map->tileSizeX*3, map->tileSizeY*3};
     SDL_RenderFillRect(context, &playerMarker);
