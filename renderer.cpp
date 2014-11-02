@@ -116,8 +116,6 @@ void Renderer::renderFlightScreen(Map *map, Player *player, int viewWidth, int v
 
   int endX = (player->xPos / (640.0f / (float)map->mapSize)) + viewWidth / 2;
   int endY = (player->yPos / (480.0f / (float)map->mapSize)) + viewHeight / 2;
-  
-  std::cout<<"startX: "<<startX<<" endX: "<<endX<<" startY: "<<startY<<" endY: "<<endY<<std::endl;
 
   for(int y=startY; y<endY; y++) {
     for(int x=startX; x<endX; x++) {
@@ -130,7 +128,6 @@ void Renderer::renderFlightScreen(Map *map, Player *player, int viewWidth, int v
       
         switch(map->getMapPoint(x, y)) {
           case 0: {//Water
-            std::cout<<"draw water at"<<tile.x<<" "<<tile.y<<" "<<tile.w<<" "<<tile.h<<std::endl;
             SDL_SetRenderDrawColor(context, 0x00, 0x00, 0xFF, 0xFF);
             break;
           }
