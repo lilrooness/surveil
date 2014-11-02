@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
   bool usingMap = true;
   bool pressedEnter = false;
 
-  Player *p = new Player(0,0,0,0);
+  Player *p = new Player(100,100,0,0);
 
   Map *map = new Map("island.lua");
   map->generateMap();
@@ -58,14 +58,14 @@ int main(int argc, char **argv) {
       }
     }
 
-    if(usingMap) {
+    if(!pressedEnter) {
       renderer.render(0, map, p);
-      if(pressedEnter && SDL_GetTicks() - lastTime > (1000 / 60)) {
+    } else {
+      if(SDL_GetTicks() - lastTime > (1000 / 60)) {
         lastTime = SDL_GetTicks();
         p->update(map);
       }
-    } else {
-      renderer.renderFlightScreen(map, p, 7, 7);
+      renderer.renderFlightScreen(map, p, 20, 20);
     }
   }
 

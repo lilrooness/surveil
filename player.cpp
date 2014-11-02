@@ -6,7 +6,7 @@ void Player::update(Map *map) {
 
   float distToWp = (float) sqrt(pow(xPos - wpx, 2) + pow(yPos - wpy, 2));
 
-  if(distToWp < 1) {
+  if(distToWp < 1 && nextWayPoint < wayPoints.size() - 1) {
     nextWayPoint ++;
     wpx = wayPoints.at(nextWayPoint).x * map->tileSizeX;
     wpy = wayPoints.at(nextWayPoint).y * map->tileSizeY;

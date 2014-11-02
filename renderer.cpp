@@ -96,7 +96,7 @@ void Renderer::render(int screen, Map *map, Player *player) {
 
     //temporary drawing of player position to check player movement
     SDL_SetRenderDrawColor(context, 0x00, 0x00, 0x00, 0xFF);
-    SDL_Rect playerMarker = {player->xPos, player->yPos, map->tileSizeX*3, map->tileSizeY*3};
+    SDL_Rect playerMarker = {player->xPos, player->yPos, map->tileSizeX*3, map->tileSizeY*3};// player is 3 times the size of a tile
     SDL_RenderFillRect(context, &playerMarker);
 
     SDL_RenderPresent(context);
@@ -104,22 +104,33 @@ void Renderer::render(int screen, Map *map, Player *player) {
 
 void Renderer::renderFlightScreen(Map *map, Player *player, int viewWidth, int viewHeight) {
   
+  SDL_SetRenderDrawColor(context, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_RenderClear(context);
+
   float tilex, tiley;
   tiley = 480.0f / (float)viewHeight;
   tilex = 640.0f / (float)viewWidth;
 
-  for(int y=player->yPos - viewHeight / 2; y<player->yPos + viewHeight / 2; y++) {
-    for(int x=player->yPos - 1; x<player->xPos + viewWidth+1; x++) {
+  int startX = (player->xPos / (640.0f / (float)map->mapSize)) - viewWidth / 2;
+  int startY = (player->yPos / (480.0f / (float)map->mapSize)) - viewHeight / 2;
 
-      SDL_Rect tile = {ceil(x*tilex), ceil(y*tiley), ceil(tilex), ceil(tiley)};
+  int endX = (player->xPos / (640.0f / (float)map->mapSize)) + viewWidth / 2;
+  int endY = (player->yPos / (480.0f / (float)map->mapSize)) + viewHeight / 2;
+  
+  std::cout<<"startX: "<<startX<<" endX: "<<endX<<" startY: "<<startY<<" endY: "<<endY<<std::endl;
+
+  for(int y=startY; y<endY; y++) {
+    for(int x=startX; x<endX; x++) {
+
+      SDL_Rect tile = {ceil((x - startX )*tilex), ceil((y - startY)*tiley), ceil(tilex), ceil(tiley)};
       
       if(x < 0 || x > map->mapSize-1 || y < 0 || y > map->mapSize-1) {
         SDL_SetRenderDrawColor(context, 0x00, 0x00, 0x00, 0x00);
-      
       } else {
       
         switch(map->getMapPoint(x, y)) {
           case 0: {//Water
+            std::cout<<"draw water at"<<tile.x<<" "<<tile.y<<" "<<tile.w<<" "<<tile.h<<std::endl;
             SDL_SetRenderDrawColor(context, 0x00, 0x00, 0xFF, 0xFF);
             break;
           }
@@ -151,6 +162,8 @@ void Renderer::renderFlightScreen(Map *map, Player *player, int viewWidth, int v
             SDL_SetRenderDrawColor(context, 0x00, 0x00, 0x00, 0xFF);
           }
         }
+
+        SDL_RenderFillRect(context, &tile);
       }
     }
   }
