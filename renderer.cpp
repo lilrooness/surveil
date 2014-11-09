@@ -38,6 +38,13 @@ Renderer::Renderer() {
     std::cout<<"No cross"<<std::endl;
     printf( "Unable to create texture! SDL Error: %s\n", SDL_GetError());
   }
+
+  renderTarget = SDL_CreateTexture(context, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 640, 480);
+
+  if(renderTarget == NULL) {
+    // SDL_SetRenderTarget(context, renderTarget);
+    printf("COuld not create texture as render target\n");
+  }
 }
 
 void Renderer::render(int screen, Map *map, Player *player) {
@@ -103,7 +110,7 @@ void Renderer::render(int screen, Map *map, Player *player) {
 }
 
 void Renderer::renderFlightScreen(Map *map, Player *player, int viewWidth, int viewHeight) {
-  
+  SDL_SetRenderTarget(context, renderTarget);
   SDL_SetRenderDrawColor(context, 0xFF, 0xFF, 0xFF, 0xFF);
   SDL_RenderClear(context);
 
@@ -164,6 +171,8 @@ void Renderer::renderFlightScreen(Map *map, Player *player, int viewWidth, int v
       }
     }
   }
-
+  SDL_SetRenderTarget(context, NULL);
+  SDL_Rect screenRect = {0, 0, 640, 480};
+  SDL_RenderCopy(context, renderTarget, NULL, &screenRect);
   SDL_RenderPresent(context);
 }

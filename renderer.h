@@ -21,6 +21,8 @@ public:
 
   SDL_Texture *cross;
 
+  SDL_Texture *renderTarget;
+
   void renderPlanningScreen();
   void renderFlightScreen(Map *map, Player *player, int viewWidth, int viewHeight);
 };
